@@ -131,7 +131,7 @@ export default function RFQDetail() {
                       <div className="space-y-1">
                         <div className="flex items-center gap-2">
                           <h3 className="font-semibold text-lg">{quote.supplierName}</h3>
-                          <<Badge variant="trustHigh">Trust: {quote.trustScore}</Badge>>Trust: {quote.trustScore}</Badge>
+                          <Badge variant="trustHigh">Trust: {quote.trustScore}</Badge>
                           {awarded === quote.id && <Badge variant="success"><CheckCircle2 className="h-3 w-3 mr-1" />Awarded</Badge>}
                         </div>
                         <div className="flex items-center gap-4 text-sm text-muted-foreground">
