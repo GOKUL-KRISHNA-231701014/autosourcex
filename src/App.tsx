@@ -9,6 +9,10 @@ import KnowledgeGraph from "./pages/KnowledgeGraph";
 import SupplierDashboard from "./pages/SupplierDashboard";
 import BuyerDashboard from "./pages/BuyerDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
+import RFQList from "./pages/RFQList";
+import RFQCreate from "./pages/RFQCreate";
+import RFQDetail from "./pages/RFQDetail";
+import SupplierQuote from "./pages/SupplierQuote";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -26,6 +30,10 @@ const App = () => (
           <Route path="/supplier" element={<SupplierDashboard />} />
           <Route path="/buyer" element={<BuyerDashboard />} />
           <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/rfq" element={<RFQList />} />
+          <Route path="/rfq/create" element={<RFQCreate />} />
+          <Route path="/rfq/:id" element={<RFQDetail />} />
+          <Route path="/supplier/quote/:id" element={<SupplierQuote />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
