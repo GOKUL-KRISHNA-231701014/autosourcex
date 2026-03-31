@@ -30,7 +30,7 @@ const sampleRFQs: RFQ[] = [
   { id: "RFQ-2830", title: "Rear Axle Housing", category: "Chassis Parts", items: 1, deadline: "2026-03-20", status: "expired", quotesReceived: 2, createdAt: "2026-03-05" },
 ];
 
-const statusConfig: Record<RFQ["status"], { icon: typeof Clock; label: string; variant: "default" | "secondary" | "outline" | "destructive" | "success" | "warning" | "trust" | "buyer" | "supplier" | "admin" }> = {
+const const statusConfig: Record<RFQ["status"], { icon: typeof Clock; label: string; variant: "default" | "secondary" | "outline" | "destructive" | "success" | "warning" | "buyer" | "supplier" | "admin" }> = { = {
   open: { icon: Clock, label: "Open", variant: "warning" },
   quoted: { icon: AlertCircle, label: "Quotes In", variant: "buyer" },
   awarded: { icon: CheckCircle2, label: "Awarded", variant: "success" },
