@@ -31,6 +31,7 @@ const App = () => (
           <Route path="/supplier" element={<SupplierDashboard />} />
           <Route path="/buyer" element={<BuyerDashboard />} />
           <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/suppliers" element={<SupplierDiscovery />} />
           <Route path="/rfq" element={<RFQList />} />
           <Route path="/rfq/create" element={<RFQCreate />} />
           <Route path="/rfq/:id" element={<RFQDetail />} />
