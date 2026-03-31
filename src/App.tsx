@@ -13,6 +13,7 @@ import RFQList from "./pages/RFQList";
 import RFQCreate from "./pages/RFQCreate";
 import RFQDetail from "./pages/RFQDetail";
 import SupplierQuote from "./pages/SupplierQuote";
+import SupplierDiscovery from "./pages/SupplierDiscovery";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
