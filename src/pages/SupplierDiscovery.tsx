@@ -248,7 +248,7 @@ export default function SupplierDiscovery() {
             {filtered.length > 0 ? (
               <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
                 {filtered.map((supplier) => (
-                  <SupplierCard key={supplier.id} supplier={supplier} onClick={() => setSelectedSupplier(supplier)} />
+                  <SupplierCard key={supplier.id} supplier={supplier} onClick={() => setSelectedSupplier(supplier)} selectable={compareMode} selected={compareIds.has(supplier.id)} onSelect={toggleCompare} />
                 ))}
               </div>
             ) : (
