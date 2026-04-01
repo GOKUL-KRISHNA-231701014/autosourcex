@@ -21,9 +21,12 @@ interface SupplierCardProps {
   supplier: Supplier;
   onClick?: () => void;
   className?: string;
+  selectable?: boolean;
+  selected?: boolean;
+  onSelect?: (id: string) => void;
 }
 
-export function SupplierCard({ supplier, onClick, className }: SupplierCardProps) {
+export function SupplierCard({ supplier, onClick, className, selectable, selected, onSelect }: SupplierCardProps) {
   const getTrustVariant = (score: number) => {
     if (score >= 80) return "trustHigh";
     if (score >= 50) return "trustMedium";
@@ -44,10 +47,23 @@ export function SupplierCard({ supplier, onClick, className }: SupplierCardProps
       transition={{ duration: 0.3 }}
       onClick={onClick}
       className={cn(
-        "group relative cursor-pointer overflow-hidden rounded-xl border border-border bg-card p-5 transition-all duration-300 hover:border-primary/40 hover:shadow-xl hover:shadow-primary/10",
+        "group relative cursor-pointer overflow-hidden rounded-xl border bg-card p-5 transition-all duration-300 hover:border-primary/40 hover:shadow-xl hover:shadow-primary/10",
+        selected ? "border-primary ring-2 ring-primary/20" : "border-border",
         className
       )}
     >
+      {/* Selection checkbox */}
+      {selectable && (
+        <button
+          onClick={(e) => { e.stopPropagation(); onSelect?.(supplier.id); }}
+          className={cn(
+            "absolute top-3 right-3 z-10 h-5 w-5 rounded border-2 flex items-center justify-center transition-all",
+            selected ? "bg-primary border-primary text-primary-foreground" : "border-muted-foreground/40 hover:border-primary"
+          )}
+        >
+          {selected && <CheckCircle2 className="h-3.5 w-3.5" />}
+        </button>
+      )}
       {/* Gradient overlay on hover */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 

@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { cn } from "@/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -11,7 +12,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import {
   Search, SlidersHorizontal, X, Zap, ShoppingCart, FileText, Package,
   Network, Star, Settings, LogOut, MapPin, CheckCircle2, Building2,
-  Phone, Mail, Globe, Award, TrendingUp, Clock, ShieldCheck
+  Phone, Mail, Globe, Award, TrendingUp, Clock, ShieldCheck, GitCompare
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -61,6 +62,23 @@ export default function SupplierDiscovery() {
   const [sortBy, setSortBy] = useState("trustScore");
   const [selectedSupplier, setSelectedSupplier] = useState<Supplier | null>(null);
   const [showFilters, setShowFilters] = useState(true);
+  const [compareMode, setCompareMode] = useState(false);
+  const [compareIds, setCompareIds] = useState<Set<string>>(new Set());
+  const [showCompare, setShowCompare] = useState(false);
+
+  const toggleCompare = (id: string) => {
+    setCompareIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else if (next.size < 4) next.add(id);
+      return next;
+    });
+  };
+
+  const compareSuppliers = useMemo(() =>
+    allSuppliers.filter((s) => compareIds.has(s.id)),
+    [compareIds]
+  );
 
   const filtered = useMemo(() => {
     let result = allSuppliers.filter((s) => {
@@ -152,6 +170,13 @@ export default function SupplierDiscovery() {
                 <SelectItem value="name">Name A-Z</SelectItem>
               </SelectContent>
             </Select>
+            <Button
+              variant={compareMode ? "default" : "outline"}
+              size="sm"
+              onClick={() => { setCompareMode(!compareMode); if (compareMode) setCompareIds(new Set()); }}
+            >
+              <GitCompare className="h-4 w-4 mr-2" />Compare
+            </Button>
           </div>
         </div>
 
@@ -222,7 +247,7 @@ export default function SupplierDiscovery() {
             {filtered.length > 0 ? (
               <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
                 {filtered.map((supplier) => (
-                  <SupplierCard key={supplier.id} supplier={supplier} onClick={() => setSelectedSupplier(supplier)} />
+                  <SupplierCard key={supplier.id} supplier={supplier} onClick={() => setSelectedSupplier(supplier)} selectable={compareMode} selected={compareIds.has(supplier.id)} onSelect={toggleCompare} />
                 ))}
               </div>
             ) : (
@@ -361,6 +386,180 @@ export default function SupplierDiscovery() {
                 </div>
               )}
             </>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Floating Compare Bar */}
+      {compareMode && compareIds.size > 0 && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 ml-32 z-50 flex items-center gap-4 rounded-xl border border-border bg-card/95 backdrop-blur-sm px-6 py-3 shadow-elevated">
+          <span className="text-sm font-medium">{compareIds.size} supplier{compareIds.size !== 1 ? "s" : ""} selected</span>
+          <Button size="sm" disabled={compareIds.size < 2} onClick={() => setShowCompare(true)}>
+            <GitCompare className="h-4 w-4 mr-2" />Compare Now
+          </Button>
+          <Button variant="ghost" size="sm" onClick={() => setCompareIds(new Set())}>Clear</Button>
+        </div>
+      )}
+
+      {/* Comparison Dialog */}
+      <Dialog open={showCompare} onOpenChange={setShowCompare}>
+        <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <GitCompare className="h-5 w-5 text-primary" />
+              Supplier Comparison
+            </DialogTitle>
+          </DialogHeader>
+
+          {compareSuppliers.length >= 2 && (
+            <div className="mt-4 overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-border">
+                    <th className="text-left py-3 px-4 text-muted-foreground font-medium w-40">Metric</th>
+                    {compareSuppliers.map((s) => (
+                      <th key={s.id} className="text-center py-3 px-4 font-semibold min-w-[180px]">
+                        <div className="flex flex-col items-center gap-1">
+                          <div className="h-10 w-10 rounded-lg bg-secondary flex items-center justify-center">
+                            <Building2 className="h-5 w-5 text-muted-foreground" />
+                          </div>
+                          <span>{s.name}</span>
+                          {s.isVerified && <CheckCircle2 className="h-3.5 w-3.5 text-success" />}
+                        </div>
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {/* Category */}
+                  <tr className="border-b border-border/50">
+                    <td className="py-3 px-4 text-muted-foreground">Category</td>
+                    {compareSuppliers.map((s) => (
+                      <td key={s.id} className="py-3 px-4 text-center">{s.category}</td>
+                    ))}
+                  </tr>
+                  {/* Location */}
+                  <tr className="border-b border-border/50">
+                    <td className="py-3 px-4 text-muted-foreground">Location</td>
+                    {compareSuppliers.map((s) => (
+                      <td key={s.id} className="py-3 px-4 text-center">
+                        <span className="flex items-center justify-center gap-1"><MapPin className="h-3 w-3" />{s.location}</span>
+                      </td>
+                    ))}
+                  </tr>
+                  {/* Trust Score */}
+                  <tr className="border-b border-border/50 bg-muted/30">
+                    <td className="py-3 px-4 text-muted-foreground font-medium">Trust Score</td>
+                    {compareSuppliers.map((s) => {
+                      const best = Math.max(...compareSuppliers.map((x) => x.trustScore));
+                      return (
+                        <td key={s.id} className="py-3 px-4 text-center">
+                          <div className="flex flex-col items-center gap-1.5">
+                            <span className={cn("text-lg font-bold", s.trustScore === best && "text-success")}>{s.trustScore}</span>
+                            <div className="h-1.5 w-20 rounded-full bg-secondary overflow-hidden">
+                              <div className={cn("h-full rounded-full", s.trustScore >= 80 ? "bg-success" : s.trustScore >= 50 ? "bg-warning" : "bg-destructive")} style={{ width: `${s.trustScore}%` }} />
+                            </div>
+                          </div>
+                        </td>
+                      );
+                    })}
+                  </tr>
+                  {/* Rating */}
+                  <tr className="border-b border-border/50">
+                    <td className="py-3 px-4 text-muted-foreground">Rating</td>
+                    {compareSuppliers.map((s) => {
+                      const best = Math.max(...compareSuppliers.map((x) => x.rating));
+                      return (
+                        <td key={s.id} className="py-3 px-4 text-center">
+                          <span className={cn("flex items-center justify-center gap-1 font-semibold", s.rating === best && "text-warning")}>
+                            <Star className="h-3.5 w-3.5 fill-warning text-warning" />{s.rating.toFixed(1)}
+                          </span>
+                        </td>
+                      );
+                    })}
+                  </tr>
+                  {/* Total Orders */}
+                  <tr className="border-b border-border/50">
+                    <td className="py-3 px-4 text-muted-foreground">Total Orders</td>
+                    {compareSuppliers.map((s) => {
+                      const best = Math.max(...compareSuppliers.map((x) => x.totalOrders));
+                      return (
+                        <td key={s.id} className="py-3 px-4 text-center">
+                          <span className={cn("font-semibold", s.totalOrders === best && "text-primary")}>{s.totalOrders}</span>
+                        </td>
+                      );
+                    })}
+                  </tr>
+                  {/* On-Time Delivery */}
+                  <tr className="border-b border-border/50 bg-muted/30">
+                    <td className="py-3 px-4 text-muted-foreground font-medium">On-Time Delivery</td>
+                    {compareSuppliers.map((s) => {
+                      const p = profileData[s.id];
+                      const vals = compareSuppliers.map((x) => profileData[x.id]?.onTimeDelivery ?? 0);
+                      const best = Math.max(...vals);
+                      return (
+                        <td key={s.id} className="py-3 px-4 text-center">
+                          {p ? <span className={cn("font-semibold", p.onTimeDelivery === best && "text-success")}>{p.onTimeDelivery}%</span> : <span className="text-muted-foreground">—</span>}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                  {/* Quality Rate */}
+                  <tr className="border-b border-border/50">
+                    <td className="py-3 px-4 text-muted-foreground">Quality Rate</td>
+                    {compareSuppliers.map((s) => {
+                      const p = profileData[s.id];
+                      const vals = compareSuppliers.map((x) => profileData[x.id]?.qualityRate ?? 0);
+                      const best = Math.max(...vals);
+                      return (
+                        <td key={s.id} className="py-3 px-4 text-center">
+                          {p ? <span className={cn("font-semibold", p.qualityRate === best && "text-success")}>{p.qualityRate}%</span> : <span className="text-muted-foreground">—</span>}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                  {/* Response Time */}
+                  <tr className="border-b border-border/50">
+                    <td className="py-3 px-4 text-muted-foreground">Response Time</td>
+                    {compareSuppliers.map((s) => {
+                      const p = profileData[s.id];
+                      return (
+                        <td key={s.id} className="py-3 px-4 text-center">
+                          {p ? <span className="font-medium">{p.responseTime}</span> : <span className="text-muted-foreground">—</span>}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                  {/* Certifications */}
+                  <tr className="border-b border-border/50 bg-muted/30">
+                    <td className="py-3 px-4 text-muted-foreground font-medium">Certifications</td>
+                    {compareSuppliers.map((s) => (
+                      <td key={s.id} className="py-3 px-4 text-center">
+                        <div className="flex flex-wrap justify-center gap-1">
+                          {s.certifications.map((c) => <Badge key={c} variant="outline" className="text-xs">{c}</Badge>)}
+                        </div>
+                      </td>
+                    ))}
+                  </tr>
+                  {/* Specializations */}
+                  <tr>
+                    <td className="py-3 px-4 text-muted-foreground">Specializations</td>
+                    {compareSuppliers.map((s) => (
+                      <td key={s.id} className="py-3 px-4 text-center">
+                        <div className="flex flex-wrap justify-center gap-1">
+                          {s.specializations.map((sp) => <Badge key={sp} variant="secondary" className="text-xs">{sp}</Badge>)}
+                        </div>
+                      </td>
+                    ))}
+                  </tr>
+                </tbody>
+              </table>
+
+              <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-border">
+                <Button variant="outline" onClick={() => setShowCompare(false)}>Close</Button>
+                <Button variant="hero" asChild><Link to="/rfq/create">Send RFQ to Selected</Link></Button>
+              </div>
+            </div>
           )}
         </DialogContent>
       </Dialog>
