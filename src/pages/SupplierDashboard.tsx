@@ -1,3 +1,4 @@
+import { NotificationBell } from "@/components/NotificationBell";
 import { MetricCard } from "@/components/ui/metric-card";
 import { ActivityFeed } from "@/components/ui/activity-feed";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
