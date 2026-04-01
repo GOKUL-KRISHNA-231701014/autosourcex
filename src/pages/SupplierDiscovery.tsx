@@ -11,8 +11,10 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import {
   Search, SlidersHorizontal, X, Zap, ShoppingCart, FileText, Package,
   Network, Star, Settings, LogOut, MapPin, CheckCircle2, Building2,
-  Phone, Mail, Globe, Award, TrendingUp, Clock, ShieldCheck
+  Phone, Mail, Globe, Award, TrendingUp, Clock, ShieldCheck, GitCompare
 } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Progress } from "@/components/ui/progress";
 import { Link } from "react-router-dom";
 
 const allSuppliers: Supplier[] = [
