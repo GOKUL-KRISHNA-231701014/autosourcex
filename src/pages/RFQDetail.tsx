@@ -51,10 +51,18 @@ export default function RFQDetail() {
   const { id } = useParams();
   const [awardDialog, setAwardDialog] = useState<Quote | null>(null);
   const [awarded, setAwarded] = useState<string | null>(null);
+  const { addNotification } = useNotifications();
 
   const handleAward = (quote: Quote) => {
     setAwarded(quote.id);
     setAwardDialog(null);
+    addNotification({
+      type: "rfq_awarded",
+      title: "RFQ Awarded",
+      message: `You awarded ${rfqDetail.title} (${rfqDetail.id}) to ${quote.supplierName}. The supplier has been notified.`,
+      link: `/rfq/${rfqDetail.id}`,
+      rfqId: rfqDetail.id,
+    });
   };
 
   return (
