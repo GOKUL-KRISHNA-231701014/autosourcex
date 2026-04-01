@@ -63,6 +63,23 @@ export default function SupplierDiscovery() {
   const [sortBy, setSortBy] = useState("trustScore");
   const [selectedSupplier, setSelectedSupplier] = useState<Supplier | null>(null);
   const [showFilters, setShowFilters] = useState(true);
+  const [compareMode, setCompareMode] = useState(false);
+  const [compareIds, setCompareIds] = useState<Set<string>>(new Set());
+  const [showCompare, setShowCompare] = useState(false);
+
+  const toggleCompare = (id: string) => {
+    setCompareIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else if (next.size < 4) next.add(id);
+      return next;
+    });
+  };
+
+  const compareSuppliers = useMemo(() =>
+    allSuppliers.filter((s) => compareIds.has(s.id)),
+    [compareIds]
+  );
 
   const filtered = useMemo(() => {
     let result = allSuppliers.filter((s) => {
