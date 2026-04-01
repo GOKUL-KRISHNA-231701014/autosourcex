@@ -148,9 +148,7 @@ export default function BuyerDashboard() {
             <p className="text-muted-foreground">Welcome back, Tata Motors</p>
           </div>
           <div className="flex items-center gap-3">
-            <Button variant="outline" size="icon">
-              <Bell className="h-4 w-4" />
-            </Button>
+            <NotificationBell />
             <Button variant="hero">
               <Plus className="h-4 w-4 mr-2" />
               Create RFQ
