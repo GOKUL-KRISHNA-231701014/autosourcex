@@ -171,6 +171,13 @@ export default function SupplierDiscovery() {
                 <SelectItem value="name">Name A-Z</SelectItem>
               </SelectContent>
             </Select>
+            <Button
+              variant={compareMode ? "default" : "outline"}
+              size="sm"
+              onClick={() => { setCompareMode(!compareMode); if (compareMode) setCompareIds(new Set()); }}
+            >
+              <GitCompare className="h-4 w-4 mr-2" />Compare
+            </Button>
           </div>
         </div>
 
