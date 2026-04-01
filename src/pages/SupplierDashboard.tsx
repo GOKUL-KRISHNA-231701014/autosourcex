@@ -1,3 +1,4 @@
+import { NotificationBell } from "@/components/NotificationBell";
 import { MetricCard } from "@/components/ui/metric-card";
 import { ActivityFeed } from "@/components/ui/activity-feed";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -120,9 +121,7 @@ export default function SupplierDashboard() {
               <CheckCircle2 className="h-3.5 w-3.5 mr-1.5" />
               Verified Supplier
             </Badge>
-            <Button variant="outline" size="icon">
-              <Bell className="h-4 w-4" />
-            </Button>
+            <NotificationBell />
             <Button variant="hero">
               <Upload className="h-4 w-4 mr-2" />
               Update Profile

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNotifications } from "@/contexts/NotificationContext";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -50,10 +51,18 @@ export default function RFQDetail() {
   const { id } = useParams();
   const [awardDialog, setAwardDialog] = useState<Quote | null>(null);
   const [awarded, setAwarded] = useState<string | null>(null);
+  const { addNotification } = useNotifications();
 
   const handleAward = (quote: Quote) => {
     setAwarded(quote.id);
     setAwardDialog(null);
+    addNotification({
+      type: "rfq_awarded",
+      title: "RFQ Awarded",
+      message: `You awarded ${rfqDetail.title} (${rfqDetail.id}) to ${quote.supplierName}. The supplier has been notified.`,
+      link: `/rfq/${rfqDetail.id}`,
+      rfqId: rfqDetail.id,
+    });
   };
 
   return (
