@@ -21,9 +21,12 @@ interface SupplierCardProps {
   supplier: Supplier;
   onClick?: () => void;
   className?: string;
+  selectable?: boolean;
+  selected?: boolean;
+  onSelect?: (id: string) => void;
 }
 
-export function SupplierCard({ supplier, onClick, className }: SupplierCardProps) {
+export function SupplierCard({ supplier, onClick, className, selectable, selected, onSelect }: SupplierCardProps) {
   const getTrustVariant = (score: number) => {
     if (score >= 80) return "trustHigh";
     if (score >= 50) return "trustMedium";
