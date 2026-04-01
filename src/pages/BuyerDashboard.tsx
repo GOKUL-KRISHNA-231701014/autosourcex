@@ -1,3 +1,4 @@
+import { NotificationBell } from "@/components/NotificationBell";
 import { MetricCard } from "@/components/ui/metric-card";
 import { SupplierCard, Supplier } from "@/components/ui/supplier-card";
 import { ActivityFeed } from "@/components/ui/activity-feed";
