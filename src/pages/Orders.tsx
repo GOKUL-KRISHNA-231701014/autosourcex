@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { MetricCard } from "@/components/ui/metric-card";
-import NavLink from "@/components/NavLink";
+import { NavLink } from "@/components/NavLink";
 import { NotificationBell } from "@/components/NotificationBell";
 import { useState } from "react";
 
