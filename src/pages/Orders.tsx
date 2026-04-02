@@ -1,11 +1,10 @@
-import { Package, Search, FileText, Network, Star, Settings, LogOut, Truck, Clock, CheckCircle, XCircle, Eye } from "lucide-react";
+import { Package, Search, FileText, Network, Star, Settings, LogOut, Truck, Clock, CheckCircle, XCircle, Eye, Zap } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { MetricCard } from "@/components/ui/metric-card";
-import { NavLink } from "@/components/NavLink";
 import { NotificationBell } from "@/components/NotificationBell";
 import { useState } from "react";
 
@@ -36,14 +35,20 @@ export default function Orders() {
   const totalValue = orders.reduce((sum, o) => sum + o.totalValue, 0);
 
   return (
-    <div className="flex min-h-screen bg-background">
+    <div className="min-h-screen bg-background">
       {/* Sidebar */}
-      <aside className="fixed left-0 top-0 z-40 h-screen w-64 border-r border-border bg-card">
-        <div className="flex h-16 items-center gap-2 border-b border-border px-6">
-          <Package className="h-6 w-6 text-primary" />
-          <span className="text-lg font-bold text-foreground">AutoSourceX</span>
+      <aside className="fixed left-0 top-0 bottom-0 w-64 border-r border-border bg-sidebar p-4 flex flex-col">
+        <div className="flex items-center gap-3 mb-8">
+          <div className="h-10 w-10 rounded-xl bg-gradient-primary flex items-center justify-center">
+            <Zap className="h-5 w-5 text-primary-foreground" />
+          </div>
+          <div>
+            <span className="font-bold">AutoSourceX</span>
+            <Badge variant="outline" className="ml-2 text-[10px]">Buyer</Badge>
+          </div>
         </div>
-        <nav className="flex flex-col gap-1 p-4">
+
+        <nav className="flex-1 space-y-1">
           {[
             { icon: Search, label: "Discover Suppliers", href: "/suppliers" },
             { icon: FileText, label: "My RFQs", href: "/rfq" },
@@ -51,19 +56,35 @@ export default function Orders() {
             { icon: Network, label: "Knowledge Graph", href: "/knowledge-graph" },
             { icon: Star, label: "Saved Suppliers", href: "/saved" },
           ].map((item) => (
-            <NavLink key={item.label} {...item} />
+            <Link
+              key={item.label}
+              to={item.href}
+              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors ${
+                item.active
+                  ? "bg-primary/10 text-primary font-medium"
+                  : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+              }`}
+            >
+              <item.icon className="h-4 w-4" />
+              {item.label}
+            </Link>
           ))}
         </nav>
-        <div className="absolute bottom-0 w-full border-t border-border p-4">
-          <nav className="flex flex-col gap-1">
-            <NavLink icon={Settings} label="Settings" href="/settings" />
-            <NavLink icon={LogOut} label="Sign Out" href="/" />
-          </nav>
+
+        <div className="pt-4 border-t border-border space-y-1">
+          <Link to="/settings" className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors">
+            <Settings className="h-4 w-4" />
+            Settings
+          </Link>
+          <Link to="/" className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors">
+            <LogOut className="h-4 w-4" />
+            Sign Out
+          </Link>
         </div>
       </aside>
 
       {/* Main */}
-      <main className="ml-64 flex-1 p-8">
+      <main className="ml-64 p-8">
         <div className="mb-8 flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold text-foreground">Orders</h1>
@@ -74,10 +95,10 @@ export default function Orders() {
 
         {/* Summary */}
         <div className="mb-8 grid grid-cols-1 gap-4 md:grid-cols-4">
-          <MetricCard title="Total Orders" value={totalOrders} icon={Package} trend={{ value: 12, isPositive: true }} />
-          <MetricCard title="Delivered" value={deliveredCount} icon={CheckCircle} trend={{ value: 8, isPositive: true }} />
+          <MetricCard title="Total Orders" value={totalOrders} icon={Package} change={{ value: 12, trend: "up" }} />
+          <MetricCard title="Delivered" value={deliveredCount} icon={CheckCircle} change={{ value: 8, trend: "up" }} />
           <MetricCard title="In Transit" value={inTransitCount} icon={Truck} />
-          <MetricCard title="Total Value" value={`₹${(totalValue / 100000).toFixed(1)}L`} icon={Package} trend={{ value: 15, isPositive: true }} />
+          <MetricCard title="Total Value" value={`₹${(totalValue / 100000).toFixed(1)}L`} icon={Package} change={{ value: 15, trend: "up" }} />
         </div>
 
         {/* Filters */}
