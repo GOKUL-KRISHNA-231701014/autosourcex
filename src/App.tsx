@@ -16,6 +16,7 @@ import RFQDetail from "./pages/RFQDetail";
 import SupplierQuote from "./pages/SupplierQuote";
 import SupplierDiscovery from "./pages/SupplierDiscovery";
 import SupplierQuotes from "./pages/SupplierQuotes";
+import Orders from "./pages/Orders";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -40,6 +41,7 @@ const App = () => (
             <Route path="/rfq/:id" element={<RFQDetail />} />
             <Route path="/supplier/quote/:id" element={<SupplierQuote />} />
             <Route path="/supplier/quotes" element={<SupplierQuotes />} />
+            <Route path="/orders" element={<Orders />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
