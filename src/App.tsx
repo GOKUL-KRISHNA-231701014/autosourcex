@@ -16,6 +16,7 @@ import RFQDetail from "./pages/RFQDetail";
 import SupplierQuote from "./pages/SupplierQuote";
 import SupplierDiscovery from "./pages/SupplierDiscovery";
 import SupplierQuotes from "./pages/SupplierQuotes";
+import Orders from "./pages/Orders";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
