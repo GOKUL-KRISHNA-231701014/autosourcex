@@ -39,6 +39,7 @@ const App = () => (
             <Route path="/rfq/create" element={<RFQCreate />} />
             <Route path="/rfq/:id" element={<RFQDetail />} />
             <Route path="/supplier/quote/:id" element={<SupplierQuote />} />
+            <Route path="/supplier/quotes" element={<SupplierQuotes />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
